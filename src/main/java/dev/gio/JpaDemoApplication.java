@@ -1,5 +1,7 @@
 package dev.gio;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,13 @@ public class JpaDemoApplication implements CommandLineRunner {
 		//guardar();
 		//buscarPorId();
 		//modificar();
-		eliminar();
+		//eliminar();
+		//conteo();
+		//eliminaTodos();
+		//encontrarPorId();
+		//buscarTodos();
+		//existeId(20);
+		guardarTodos();
 	}
 
 	private void guardar() {
@@ -68,4 +76,65 @@ public class JpaDemoApplication implements CommandLineRunner {
 			System.out.println("Categoria no encontrada");
 		}
 	}
+	
+	private void conteo() {
+		long count = repo.count();
+		System.out.println("Total categorias: "+count);
+	}
+	
+	private void eliminaTodos() {
+		repo.deleteAll();
+	}
+	
+	private void encontrarPorId() {
+		List<Integer> ids = new LinkedList<Integer>();
+		ids.add(3);
+		ids.add(8);
+		ids.add(15);
+		Iterable<Categoria> categorias = repo.findAllById(ids);
+		for(Categoria cat : categorias) {
+			System.out.println(cat);
+		}
+	}
+	
+	private void buscarTodos() {
+		Iterable<Categoria> categorias = repo.findAll();
+		for(Categoria cat : categorias) {
+			System.out.println(cat);
+		}
+	}
+	
+	private void existeId(int id) {
+		boolean existe = repo.existsById(id);
+		System.out.println("Existe el registro: "+id+"? "+existe);
+	}
+	
+	private void guardarTodos() {
+		List<Categoria> categorias = getListaCategorias();
+		repo.saveAll(categorias);
+	}
+	
+	private List<Categoria> getListaCategorias(){
+		LinkedList<Categoria> lista = new LinkedList<Categoria>();
+		
+		Categoria cat1 = new Categoria();
+		cat1.setNombre("Programador de blockChain");
+		cat1.setDescripcion("Trabajos relacionados con Bitcoin y Criptomonedas");
+		
+		Categoria cat2 = new Categoria();
+		cat2.setNombre("Soldador/Pintura");
+		cat2.setDescripcion("Trabajos relacionados con Soldar, pintar y enderezado");
+		
+		Categoria cat3 = new Categoria();
+		cat3.setNombre("Ingeniero Industrial");
+		cat3.setDescripcion("Trabajos relacionados con Ingenieria Industrial");
+		
+		lista.add(cat1);
+		lista.add(cat2);
+		lista.add(cat3);
+		
+		return lista;
+		
+	}
+	
 }
