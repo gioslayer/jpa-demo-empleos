@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import dev.gio.model.Categoria;
 import dev.gio.repository.CategoriasRepository;
@@ -27,16 +30,22 @@ public class JpaDemoApplication implements CommandLineRunner {
 		System.out.println("Iniciando el repo");
 		System.out.println(repo);
 		System.out.println("Repo iniciado");
-		//guardar();
-		//buscarPorId();
-		//modificar();
-		//eliminar();
-		//conteo();
-		//eliminaTodos();
-		//encontrarPorId();
-		//buscarTodos();
-		//existeId(20);
-		guardarTodos();
+//		guardar();
+//		buscarPorId();
+//		modificar();
+//		eliminar();
+//		conteo();
+//		eliminaTodos();
+//		encontrarPorId();
+//		buscarTodos();
+//		existeId(20);
+//		guardarTodos();
+//		buscarTodosJPA();
+//		borrarTodoEnBloque();
+//		buscarTodosOrdenados();
+//		buscarTodosPaginacion();
+		buscarTodosPaginacionOrdenados();
+		System.out.println("Repo Finalizado");
 	}
 
 	private void guardar() {
@@ -137,4 +146,41 @@ public class JpaDemoApplication implements CommandLineRunner {
 		
 	}
 	
+	private void buscarTodosJPA() {
+		List<Categoria> categorias = repo.findAll();
+		for(Categoria cat : categorias) {
+			System.out.println(cat.getId()+" "+cat.getNombre());
+		}
+	}
+	
+//	Elimina todo de tal tabla
+	private void borrarTodoEnBloque() {
+		repo.deleteAllInBatch();
+	}
+	
+	private void buscarTodosOrdenados() {
+//		List<Categoria> categorias = repo.findAll(Sort.by("nombre").descending());
+		List<Categoria> categorias = repo.findAll(Sort.by("nombre"));
+		for(Categoria cat : categorias) {
+			System.out.println(cat.getId()+" "+cat.getNombre());
+		}
+	}
+	
+	private void buscarTodosPaginacion() {
+		Page<Categoria> page = repo.findAll(PageRequest.of(0, 5));
+		System.out.println("Total Registros: " + page.getTotalElements());
+		System.out.println("Total Paginas: " + page.getTotalPages());
+		for(Categoria cat : page.getContent()) {
+			System.out.println(cat.getId() + " " + cat.getNombre());
+		}
+	}
+
+	private void buscarTodosPaginacionOrdenados() {
+		Page<Categoria> page = repo.findAll(PageRequest.of(0, 5, Sort.by("nombre")));
+		System.out.println("Total Registros: " + page.getTotalElements());
+		System.out.println("Total Paginas: " + page.getTotalPages());
+		for(Categoria cat : page.getContent()) {
+			System.out.println(cat.getId() + " " + cat.getNombre());
+		}
+	}
 }
