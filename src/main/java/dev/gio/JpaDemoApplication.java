@@ -1,5 +1,6 @@
 package dev.gio;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import dev.gio.model.Categoria;
 import dev.gio.model.Vacante;
 import dev.gio.repository.CategoriasRepository;
+import dev.gio.repository.PerfilesRepository;
+import dev.gio.repository.UsuariosRepository;
 import dev.gio.repository.VacantesRepository;
 
 @SpringBootApplication
@@ -25,6 +28,12 @@ public class JpaDemoApplication implements CommandLineRunner {
 	
 	@Autowired
 	private VacantesRepository repoVacantes;
+	
+	@Autowired
+	private UsuariosRepository repoUsuarios;
+	
+	@Autowired
+	private PerfilesRepository repoPerfiles;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(JpaDemoApplication.class, args);
@@ -51,7 +60,8 @@ public class JpaDemoApplication implements CommandLineRunner {
 //		buscarTodosPaginacion();
 //		buscarTodosPaginacionOrdenados();
 //		A partir de aqui se hacen los llamados a los metodos de Vacantes
-		buscarVacantes();
+//		buscarVacantes();
+		guardarVacante();
 		System.out.println("***** Repo Finalizado *****");
 	}
 
@@ -196,5 +206,21 @@ public class JpaDemoApplication implements CommandLineRunner {
 		for(Vacante v : lista) {
 			System.out.println(v.getId() + " " + v.getNombre() + " -> "+v.getCategoria().getNombre());
 		}
+	}
+	
+	private void guardarVacante() {
+		Vacante vacante = new Vacante();
+		Categoria categoria = new Categoria();
+		vacante.setNombre("Profesor de Matemáticas");
+		vacante.setDescripcion("Escuela primaria solicita profesor con altos conocimientos para impartir la materia de matemáticas");
+		vacante.setFecha(new Date());
+		vacante.setSalario(15000.0);
+		vacante.setEstatus("Aprobada");
+		vacante.setDestacado(0);
+		vacante.setImagen("escuela.png");
+		vacante.setDetalles("<h1>Los requisitos para profesor de matemáticas");
+		categoria.setId(15);
+		vacante.setCategoria(categoria);
+		repoVacantes.save(vacante);
 	}
 }
