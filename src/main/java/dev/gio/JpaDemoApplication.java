@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import dev.gio.model.Categoria;
+import dev.gio.model.Perfil;
+import dev.gio.model.Usuario;
 import dev.gio.model.Vacante;
 import dev.gio.repository.CategoriasRepository;
 import dev.gio.repository.PerfilesRepository;
@@ -61,7 +63,10 @@ public class JpaDemoApplication implements CommandLineRunner {
 //		buscarTodosPaginacionOrdenados();
 //		A partir de aqui se hacen los llamados a los metodos de Vacantes
 //		buscarVacantes();
-		guardarVacante();
+//		guardarVacante();
+//		crearPerfilesAplicacion();
+//		crearUsuariocConDosPerfil();
+		buscarUsuario();
 		System.out.println("***** Repo Finalizado *****");
 	}
 
@@ -222,5 +227,75 @@ public class JpaDemoApplication implements CommandLineRunner {
 		categoria.setId(15);
 		vacante.setCategoria(categoria);
 		repoVacantes.save(vacante);
+	}
+	
+	/**
+	 * Método que regresa una lista de objetos de tipo Perfil que representa los diferentes PERFILES
+	 * o ROLES que tenemos en nuestra aplicación de empleos
+	 * @return
+	 */
+	private List<Perfil> getPerfilesAplicacion(){
+		
+		List<Perfil> lista = new LinkedList<Perfil>();
+		
+		Perfil supervisor = new Perfil();
+		Perfil administrador = new Perfil();
+		Perfil usuario = new Perfil();
+		
+		
+		supervisor.setPerfil("SUPERVISOR");
+		administrador.setPerfil("ADMINISTRADOR");
+		usuario.setPerfil("USUARIO");
+		
+		lista.add(supervisor);
+		lista.add(administrador);
+		lista.add(usuario);
+		
+		return lista;
+	}
+	
+	private void crearPerfilesAplicacion() {	
+		repoPerfiles.saveAll(getPerfilesAplicacion());
+	}
+	
+	/**
+	 * Crear usuario con dos perfiles SUPERVISOR y ADMINISTRADOR
+	 */
+	private void crearUsuariocConDosPerfil() {
+		Usuario user = new Usuario();
+		user.setNombre("Giovanni Peña Cedillo");
+		user.setEmail("giovanni_slayer@hotmail.com");
+		user.setFechaRegistro(new Date());
+		user.setUsername("Megaslayer");
+		user.setPassword("1234");
+		user.setEstatus(1);
+		
+		Perfil perf1 = new Perfil();
+		perf1.setId(2);
+		
+		Perfil perf2 = new Perfil();
+		perf2.setId(3);
+		
+		user.agregar(perf1);
+		user.agregar(perf2);
+		
+		repoUsuarios.save(user);
+	}
+	
+	/**
+	 * Metodo para buscar un usuario y desplegar sus perfiles
+	 */
+	private void buscarUsuario() {
+		Optional<Usuario> optional = repoUsuarios.findById(1);
+		if(optional.isPresent()) {
+			Usuario u = optional.get();
+			System.out.println("Usuario: "+u.getNombre());
+			System.out.println("Perfiles asignados: ");
+			for(Perfil p : u.getPerfiles()) {
+				System.out.println(p.getPerfil());
+			}
+		}else {
+			System.out.println("Usuario no encontrado");
+		}
 	}
 }

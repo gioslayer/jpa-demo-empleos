@@ -7,11 +7,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Usuarios")
+@Table(name="Perfiles")
 public class Perfil {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)		//usado por MySQL
+	@GeneratedValue(strategy=GenerationType.IDENTITY)		//autoincrementado por MySQL
 	private Integer id;
 	private String perfil;
 	
