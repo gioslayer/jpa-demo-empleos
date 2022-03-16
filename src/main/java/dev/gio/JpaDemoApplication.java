@@ -66,7 +66,11 @@ public class JpaDemoApplication implements CommandLineRunner {
 //		guardarVacante();
 //		crearPerfilesAplicacion();
 //		crearUsuariocConDosPerfil();
-		buscarUsuario();
+//		buscarUsuario();
+//		buscarVacantesPorEstatus();
+//		buscarvacantesPorDestacadoEstatus();
+//		buscarVacantesSalario();
+		findByEstatusIn();
 		System.out.println("***** Repo Finalizado *****");
 	}
 
@@ -296,6 +300,51 @@ public class JpaDemoApplication implements CommandLineRunner {
 			}
 		}else {
 			System.out.println("Usuario no encontrado");
+		}
+	}
+	
+	/**
+	 * Query method: Buscar Vacantes por Estatus
+	 */
+	private void buscarVacantesPorEstatus() {
+		List<Vacante> lista = repoVacantes.findByEstatus("Aprobada");
+		System.out.println("Registros encontrados: "+lista.size());
+		for(Vacante v : lista) {
+			System.out.println(v.getId() + ": "+v.getNombre()+": "+v.getEstatus());
+		}
+	}
+	
+	/**
+	 * Query method: Buscar Vacantes por Destacado y Estatus, ordenado por Id Desc
+	 */
+	private void buscarvacantesPorDestacadoEstatus() {
+		List<Vacante> lista = repoVacantes.findByDestacadoAndEstatusOrderByIdDesc(1, "Aprobada");
+		System.out.println("Registros encontrados: "+lista.size());
+		for(Vacante v : lista) {
+			System.out.println(v.getId() + ": "+v.getNombre()+": "+v.getEstatus()+": "+v.getDestacado());
+		}
+	}
+	
+	/**
+	 * Query method: Buscar Vacantes pro rango de Salario (Between)
+	 */
+	private void buscarVacantesSalario() {
+		List<Vacante> lista = repoVacantes.findBySalarioBetweenOrderBySalarioDesc(7000, 14000);
+		System.out.println("Registros encontrados: "+lista.size());
+		for(Vacante v : lista) {
+			System.out.println(v.getId() + ": "+v.getNombre()+": "+v.getSalario());
+		}
+	}
+	
+	/**
+	 * Query method: Buscar Vacantes por varios Estatus
+	 */
+	private void findByEstatusIn() {
+		String[] estatus = new String[] {"Eliminada", "Creada"};
+		List<Vacante> lista = repoVacantes.findByEstatusIn(estatus);
+		System.out.println("Registros encontrados: "+lista.size());
+		for(Vacante v : lista) {
+			System.out.println(v.getId() + ": "+v.getNombre()+": "+v.getEstatus());
 		}
 	}
 }
